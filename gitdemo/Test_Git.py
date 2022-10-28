@@ -1,8 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
-
+# MAGIC 
 # MAGIC This is a sample note book to test GIT REPO Integration.
-
 
 # COMMAND ----------
 

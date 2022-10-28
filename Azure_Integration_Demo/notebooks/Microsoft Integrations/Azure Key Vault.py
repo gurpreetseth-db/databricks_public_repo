@@ -80,8 +80,8 @@
 
 # COMMAND ----------
 
-akv_secret_scope = "gsethi-kv-scope" # The Azure Key Vault Secret Scope
-akv_secret_key = "gsethi-storage-secret" # The AKV secret key name corresponding to the secret
+akv_secret_scope = "secretscope-demo" # The Azure Key Vault Secret Scope
+akv_secret_key = "adls-storage-secret" # The AKV secret key name corresponding to the secret
 
 mysecret =  dbutils.secrets.get(scope = akv_secret_scope, key = akv_secret_key)
 print(mysecret)

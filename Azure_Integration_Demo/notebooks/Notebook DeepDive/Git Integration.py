@@ -10,3 +10,7 @@
 
 foo = 'Git Is Cool!'
 print(foo)
+
+# COMMAND ----------
+
+
