@@ -67,13 +67,13 @@
 # MAGIC We'll use [Databricks secrets](https://docs.databricks.com/security/secrets/index.html) to hold our API tokens. Use the [Databricks Secrets CLI](https://docs.databricks.com/dev-tools/cli/secrets-cli.html) or [Secrets API 2.0](https://docs.databricks.com/dev-tools/api/latest/secrets.html) to manage your secrets. The below examples use the Secrets CLI
 # MAGIC
 # MAGIC - If you don't already have a secret scope to keep your OpenAI keys in, create one now: 
-# MAGIC   `databricks secrets create-scope --scope open_api_token`
+# MAGIC   `databricks secrets create-scope --scope <<SCOPE NAME>>`
 # MAGIC - You will need to give `READ` or higher access for principals (e.g. users, groups) who are allowed to connect to OpenAI. 
 # MAGIC   - We recommend creating a group `openai-users` and adding permitted users to that group
 # MAGIC   - Then give that group `READ` (or higher) permission to the scope: 
-# MAGIC     `databricks secrets put-acl --scope open_api_token --principal openai-users --permission READ`
+# MAGIC     `databricks secrets put-acl --scope <<SCOPE NAME>> --principal openai-users --permission READ`
 # MAGIC - Create a secret for your API access token. We recommend format `<resource-name>-key`: 
-# MAGIC   `databricks secrets put --scope open_api_token --key azure-openai`
+# MAGIC   `databricks secrets put --scope <<SCOPE NAME>> --key <<OPEN_AI_KEY>>`
 # MAGIC
 # MAGIC **Caution**: Do **NOT** include your token in plain text in your Notebook, code, or git repo
 
@@ -92,18 +92,20 @@ SCHEMA = "openai_experimentation"
 TABLE_RAW_REVIEWS = "raw_amazon_reviews_pds"
 SEED = "123456"
 
+
 dbutils.widgets.removeAll()
 dbutils.widgets.text("catalog", CATALOG, "Catalog")
 dbutils.widgets.text("schema", SCHEMA, "Schema")
 dbutils.widgets.text("raw_reviews_table", TABLE_RAW_REVIEWS, "Target table for Review Data")
 dbutils.widgets.text("seed", SEED, "Random seed for reproducibility")
 
+
 # COMMAND ----------
 
-# MAGIC %sql
-# MAGIC USE CATALOG ${catalog};
-# MAGIC CREATE SCHEMA IF NOT EXISTS ${schema};
-# MAGIC USE SCHEMA ${schema};
+"%sql
+USE CATALOG ${catalog};
+CREATE SCHEMA IF NOT EXISTS ${schema};
+USE SCHEMA ${schema};
 
 # COMMAND ----------
 
@@ -161,7 +163,7 @@ dbutils.widgets.text("seed", SEED, "Random seed for reproducibility")
 # MAGIC %sql
 # MAGIC SELECT AI_GENERATE_TEXT("Classify product categories + one-sentence description: Tim Tams, Vegemite, Cadbury",
 # MAGIC   "azure_openai/gpt-35-turbo",
-# MAGIC   "apiKey", SECRET("open_api_token", "azure-openai"),
+# MAGIC   "apiKey", SECRET("SCOPE NAME", "OPEN API KEY VALUE"),
 # MAGIC   "temperature", CAST(0.0 AS DOUBLE),
 # MAGIC   "deploymentName", "dbdemos-open-ai",
 # MAGIC   "apiVersion", "2023-03-15-preview",  
@@ -217,7 +219,7 @@ dbutils.widgets.text("seed", SEED, "Random seed for reproducibility")
 # MAGIC RETURNS STRING
 # MAGIC RETURN AI_GENERATE_TEXT(prompt,
 # MAGIC   "azure_openai/gpt-35-turbo",
-# MAGIC   "apiKey", SECRET("tokens", "azure-openai"),
+# MAGIC   "apiKey", SECRET("SCOPE NAME", "OPEN API KEY VALUE"),
 # MAGIC   "temperature", CAST(0.0 AS DOUBLE),
 # MAGIC   "deploymentName", "llmbricks",
 # MAGIC   "apiVersion", "2023-03-15-preview",  
